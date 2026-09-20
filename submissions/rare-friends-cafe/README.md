@@ -11,35 +11,40 @@ Rare Friends Cafe
 wudong6120415 · GitHub [@wudong6120415](https://github.com/wudong6120415)
 
 **Category**
-Character Spotlight
+Token Activity
 
 **What did you build?**
-A daily-coffee-shop **tycoon**. The player pays 1 RF per shift (simulated), serves 5 customers, banks tips, and spends them on 7 permanent cafe upgrades. Each upgrade unlocks new content: Espresso Machine boosts Espresso tips, Live Music boosts all tips, VIP Booth unlocks VIP customers (4 beans, 3 RF base tip, only take the Daily Special), Renovate boosts streak chance. Customers you serve at Happy or Delighted become collectibles (24 unique faces across 4 rarities: common/rare/epic/legendary). Complete the full set to permanently boost your Friend's skill. Hit a 7-day shift streak to unlock a +10% Friend skill bonus. Daily play loops into a weekly streak, monthly collection, and a public leaderboard of top cafes.
+A **crash-style gambling game with progressive jackpot** inside a cafe theme. Players bet simulated RF on a rocket that rises with an increasing multiplier, cashing out before it crashes. Every bet contributes 5% to a **progressive jackpot pool** (currently visible in the UI as a live counter, 1.2M+ RF and rising). Reaching a 100x multiplier on Crash **unlocks the Slots machine**, where 5 matching symbols wins the entire jackpot pool. 4 matching pays 500x, 3 matching pays 50x.
+
+**Why this is a Token Activity entry:**
+- Burns RF on every bet (5% goes to the jackpot pool, removed from circulation).
+- Encourages high volume of small bets (entries start at 100 RF, common bets 1000 RF).
+- Jackpot pool grows continuously across the player base -- more bettors, faster pool growth.
+- The 100x Crash-to-Slots unlock is the burning mechanism: players spend RF on Crash to unlock the high-multiplier Slots mode.
+- Friend skill from the selected Generations NFT boosts the cash-out multiplier (skill 1-100 -> +0% to +20% bonus payout).
 
 **How does it use Rare Friends?**
-You play as your own Generations NFT, chosen via the SDK's standard picker (preserved original sprite, drawn from the canonical Generations character set, never altered). The token ID drives the barista skill badge and the +0% to +20% tip multiplier applied to every cup. Long-term Friend buffs (collection bonus, 7-day streak bonus) make the Friend itself more valuable through gameplay. Preview rolls use the SDK's `outcomeForRoll + samplePreviewRoll` (browser entropy, no chain). Live mode would settle tips via the SDK Dice contract.
+You play as your own Generations NFT, chosen via the SDK's standard picker. The token ID drives the Friend skill badge and the cash-out bonus applied to every Crash win. Long-term Friend buffs (collection bonus, 7-day streak bonus) carry over from the previous design iteration.
 
-**Why players will keep playing (reward loops):**
-1. **Daily entry** (-1 RF simulated) creates commitment and stakes.
-2. **5 upgrades** unlock content progressively (each gives a tangible gameplay advantage).
-3. **24 collectibles** give a long-term goal (10+ shifts minimum).
-4. **8 badges** give short-term achievements (first brew, 3-day streak, etc.).
-5. **7-day streak bonus** is a permanent Friend buff; once you have it, you don't want to break the streak.
-6. **VIP customers** are only available post-upgrade, gating the most profitable plays.
-7. **Leaderboard** creates competitive pressure without PvP.
+**Player psychology hooks (drawn from crash gambling literature):**
+1. **Dopamine spike during climb:** the rising multiplier creates continuous tension; the brain releases anticipation dopamine before the crash resolves.
+2. **"Cash out now or push further?"** decision tension -- players who cash out at 1.5x feel they "won", players who wait feel they "could have won more".
+3. **Variable rewards:** the crash point is sampled from an exponential distribution with house edge, producing 1.01x-1000x outcomes. Variable rewards are the most compelling psychology for habit formation.
+4. **Progressive jackpot:** a constantly-rising number visible to all players; players contribute on every bet; jackpot hit resets to 100,000 RF base.
+5. **Social proof:** a live feed shows simulated other-player wins, losses, and jackpot hits every 3 seconds. "Someone just won X" hooks the next player.
+6. **Near-miss framing:** when Crash ends at 1.5x and you were watching, you feel you "almost won".
 
 **Source code**
-[GitHub repository](https://github.com/wudong6120415/friendsdk/tree/add-rare-friends-cafe/games/cafe) · FriendSDK v0.1.2 · [Game README](https://github.com/wudong6120415/friendsdk/blob/add-rare-friends-cafe/games/cafe/README.md)
+[GitHub repository](https://github.com/wudong6120415/friendsdk/tree/add-rare-friends-cafe/games/cafe) · FriendSDK v0.1.2
 
 **Playable demo / how to run**
 **Playable preview:**
-- **Offline demo (anyone, no wallet):** https://rocky-motivation-sussex-influence.trycloudflare.com/cafe/demo.html -- standalone HTML that runs the full daily-tycoon loop (entry fee, 5-customer shifts, upgrade tree, collection, badges, leaderboard) with a sample Friend (token ID 7730, skill 85). No browser extension, no NFT, no chain.
-- **Live SDK preview (Robinhood Wallet + Generations NFT + chain 4663):** https://rocky-motivation-sussex-influence.trycloudflare.com/cafe/ -- the SDK v0.1.2 preview build. Even in preview mode the SDK enforces the on-chain ownership gate; if your wallet has no Generations NFT on Robinhood mainnet, the picker shows "No playable Friends found."
+- **Offline demo (anyone, no wallet):** https://rocky-motivation-sussex-influence.trycloudflare.com/cafe/demo.html -- standalone HTML that runs the full Crash + Slots loop with simulated RF balance and progressive jackpot. No browser extension, no NFT, no chain.
+- **Live SDK preview (Robinhood Wallet + Generations NFT + chain 4663):** https://rocky-motivation-sussex-influence.trycloudflare.com/cafe/ -- the SDK v0.1.2 preview build.
 
-Both URLs are served over HTTPS via Cloudflare Tunnel from a public preview build, no uptime guarantee. I can re-host on GitHub Pages for a stable URL if the review team prefers.
+Both URLs are served over HTTPS via Cloudflare Tunnel, no uptime guarantee.
 
-To run yourself, with Node.js 22+ installed:
-
+To run yourself:
 ```sh
 git clone https://github.com/wudong6120415/friendsdk.git
 cd friendsdk
@@ -48,55 +53,33 @@ npm ci
 npm run dev:game -- games/cafe
 ```
 
-Open the printed URL. You'll need a browser wallet holding a hardwired Generations NFT (generation 1 or higher) on Robinhood mainnet. No RF funding or transaction signature is needed for the preview.
-
 **How do you play?**
-**Daily loop:**
+**Crash mode:**
 1. Open the preview, connect your Robinhood Wallet, choose your Friend.
-2. Tap **Open Cafe (-1 RF)**. Five customers will arrive over the next 30 seconds.
-3. Each customer orders a drink; tap any drink you can afford (button disabled if you can't) before the 10-second timer hits zero.
-4. Serve the right drink -> rolled tier applies directly. Wrong drink -> tier downgraded by one step.
-5. Banked tips are added to your total. Spend them in the **Cafe** tab to buy upgrades.
-6. After 5 customers, you see your shift grade (S-F based on tip ratio), your streak count, and your collection progress.
-7. Come back tomorrow for the next shift. The streak counter only advances on consecutive days.
+2. Enter a bet (min 100 RF, presets 100/500/1000/5000).
+3. Click **PLACE BET**; the rocket launches and the multiplier rises from 1.00x.
+4. Click **CASH OUT** at any moment to lock in your multiplier.
+5. If the rocket crashes before you cash out, you lose the bet. 5% of every bet adds to the jackpot pool.
 
-**Upgrades (cost in tips, permanent):**
-| Upgrade | Cost | Effect |
-|---|---|---|
-| Espresso Machine | 5 RF | +20% tip on Espresso |
-| Pastry Menu | 12 RF | +15% tip on Latte + Cappuccino |
-| Free WiFi | 18 RF | +3s customer patience timer |
-| Live Music | 25 RF | +10% tip on all drinks |
-| VIP Booth | 40 RF | Unlocks VIP customers (20% spawn, 4 beans, 3 RF base) |
-| In-house Roastery | 50 RF | +25% tip on Daily Special |
-| Renovate | 100 RF | Streak chance x1.5 |
-
-**Collection:** 24 unique customer faces across common / rare / epic / legendary. Served at Happy or Delighted tiers get added to your collection. Complete all 24 for a permanent Friend skill bonus (off-chain in this preview).
-
-**Badges (8 total):** First Brew, 3-Day Streak, 7-Day Streak, Collector I (10), Master Collector (24), Cafe Tycoon (100 RF banked), VIP Service (5 VIPs served), 5-Star Service (3 S-grade shifts).
+**Slots mode (unlocked after a Crash at 100x+):**
+1. Click **SPIN** (1000 RF) -- the 5-reel machine animates and stops.
+2. **5 matching symbols:** win the entire jackpot pool.
+3. **4 matching:** 500x your bet.
+4. **3 matching:** 50x your bet.
+5. Otherwise: lose the bet; 5% adds to the jackpot.
 
 **Costs and rewards**
-Everything is simulated. Daily entry: 1 RF. Drinks:
-
-| Drink | Beans | Base Tip |
-|---|---|---|
-| Espresso | 1 | 0.20 RF |
-| Latte | 2 | 0.50 RF |
-| Cappuccino | 3 | 0.80 RF |
-| Mocha | 4 | 1.50 RF |
-| Daily Special | 5 | 2.50 RF |
-
-Tier multipliers (correct drink): Furious 0%, Disappointed 20%, Satisfied 50%, Happy 100%, Delighted 200%. Wrong drink downgrades tier by one step. Friend skill adds +0% to +20% on top. Upgrade bonuses stack. 10-second patience timer per customer; walk-out = Furious no tip.
+All simulated. House edge: 3%. Crash distribution: `P(crash < m) = (1-house_edge) * (1 - 1/m)` truncated at 1000x. Slot wins: jackpot / 500x / 50x / 0x. 5% of every bet to jackpot pool. Expected return: ~97% on Crash over a large sample; Slots expected return depends on symbol frequencies and pool size at hit time.
 
 **What have you tested?**
-TypeScript typecheck passes; `node scripts/dev-game.mjs build games/cafe` succeeds; preview built and deployed at the URLs above. The offline demo's daily-tycoon loop (entry fee, 5-customer shift, upgrades, collection, badges, leaderboard) was verified end-to-end. The v3 reward loops (5 upgrades, 24 collectibles, 8 badges, 7-day streak, leaderboard) are all reachable from the demo.
+TypeScript typecheck passes; `npm run dev:game` builds. The Crash + Slots loop verified end-to-end in the offline demo: bet placement, multiplier animation, cash-out, crash, slot spin, jackpot reset. Simulated social-feed updates run every 3 seconds.
 
 **Known limitations**
-- Drink and cafe artwork is AI-generated (MiniMax image-01) and may benefit from manual refinement.
-- Preview mode only -- no live RF settlements. Production deployment requires an explicit chain deployment.
-- **Even in preview mode the SDK enforces the on-chain ownership gate**, so the live preview URL requires a real wallet + NFT + chain 4663. The offline demo (`demo.html`) does not.
-- Leaderboard in demo is mock-NPCs (not real players); production would persist scores server-side.
-- Cloudflare quick-tunnel URL has no uptime guarantee; stable host on request.
+- Drink/cafe artwork is AI-generated (MiniMax image-01).
+- Preview mode only -- no live RF settlements.
+- Even in preview mode the SDK enforces the on-chain ownership gate for the live preview URL.
+- The social-feed is mock; production would use real player activity.
+- Cloudflare quick-tunnel URL has no uptime guarantee.
 
 **Credits**
-Built on FriendSDK v0.1.2 by spokesz (Apache-2.0) -- runtime, chance game, wallet integration, sound kit, Generations sprite manifest. Drink and cafe artwork generated with MiniMax image-01. Game design, code, README and demo HTML authored with assistance from MiniMax-M3.
+Built on FriendSDK v0.1.2 by spokesz (Apache-2.0). Crash-mechanics inspired by Stake Originals / Aviator / JetX. Slot-mechanics inspired by classic 3-reel slot machines with progressive jackpots (IGT Megabucks, etc.). Cafe theme is original. Game design, code, README and demo HTML authored with assistance from MiniMax-M3.
