@@ -4,7 +4,24 @@ A fishing game that lets your selected Rare Friend NFT explore the deep sea, cas
 
 > Submitted to the [RareFriends Vibeathon 2026](https://rarefriends.com/) — **Character Spotlight** category.
 
-![Deep Sea Treasures preview](https://via.placeholder.com/800x500/000/fff?text=Deep+Sea+Treasures+Preview)
+## Fish collection
+
+| Tier | Common | Uncommon | Rare | Epic | Legendary |
+|---|---|---|---|---|---|
+| **Fish** | Coral Pebble | Sunfish | Rainbow Trout | Koi | Dragon Carp |
+| **Chance** | 35% | 28% | 18% | 12% | 7% |
+
+Each fish artwork was generated with MiniMax image-01 for this submission. Files: `coral_pebble.jpg`, `sunfish.jpg`, `rainbow_trout.jpg`, `koi.jpg`, `dragon_carp.jpg`.
+
+## Game flow
+
+1. **Connect** Robinhood mainnet wallet (chain 4663)
+2. **Choose** your Rare Friend NFT (gen 1+)
+3. **Cast** bait (1 RF per cast, simulated)
+4. **Reel in** one of five NFT fish tiers
+5. **Collect** your catches
+
+All five fish types are generated as JPG assets in this submission.
 
 ## TL;DR
 
